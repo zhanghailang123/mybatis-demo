@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: custom-mybatis
+  datasource:
+    #      url: jdbc:postgresql://172.17.5.141:5432/gig_contract
+    #      username: deliver_zhaopin
+    #      password: deliver_zhaopin
+    #      driver-class-name: org.postgresql.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/user?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+
+server:
+  port: 8099
+mybatis:
+  mapper-locations: mapper/*.xml
