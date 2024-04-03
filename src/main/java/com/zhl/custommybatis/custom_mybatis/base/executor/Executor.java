@@ -6,6 +6,7 @@ import com.zhl.custommybatis.custom_mybatis.mapping.MappedStatement;
 import com.zhl.custommybatis.custom_mybatis.session.ResultHandler;
 import com.zhl.custommybatis.custom_mybatis.session.RowBounds;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -17,5 +18,5 @@ public interface Executor {
 
     int update(MappedStatement ms, Object parameter);
 
-    <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey cacheKey, BoundSql boundSql);
+    <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey cacheKey, BoundSql boundSql) throws SQLException;
 }

@@ -7,6 +7,7 @@ import com.zhl.custommybatis.custom_mybatis.mapping.MappedStatement;
 import com.zhl.custommybatis.custom_mybatis.session.ResultHandler;
 import com.zhl.custommybatis.custom_mybatis.session.RowBounds;
 
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
@@ -17,10 +18,14 @@ import java.util.List;
 public class SimpleExecutor extends BaseExecutor{
 
     @Override
-    protected <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
+    protected <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
         Statement stmt = null;
-        Configuration configuration = ms.getConfiguration();
-        StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
-        return null;
+        try {
+            Configuration configuration = ms.getConfiguration();
+            StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
+            return handler.query(stmt, resultHandler);
+        } finally {
+            closeStatement(stmt);
+        }
     }
 }

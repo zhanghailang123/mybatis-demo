@@ -7,6 +7,8 @@ import com.zhl.custommybatis.custom_mybatis.mapping.MappedStatement;
 import com.zhl.custommybatis.custom_mybatis.session.ResultHandler;
 import com.zhl.custommybatis.custom_mybatis.session.RowBounds;
 
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 /**
@@ -27,7 +29,7 @@ public abstract class BaseExecutor implements Executor{
 
     @Override
     public <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds,
-            ResultHandler resultHandler, CacheKey cacheKey, BoundSql boundSql) {
+            ResultHandler resultHandler, CacheKey cacheKey, BoundSql boundSql) throws SQLException {
         if (closed) {
             throw new IllegalStateException();
         }
@@ -48,7 +50,7 @@ public abstract class BaseExecutor implements Executor{
         return list;
     }
 
-    private <E> List<E> queryFromDataBase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) {
+    private <E> List<E> queryFromDataBase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
         List<E> list;
         localCache.putObject(key, "放入占位符");
         try {
@@ -60,5 +62,15 @@ public abstract class BaseExecutor implements Executor{
         return list;
     }
 
-    protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql);
+    protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException;
+
+    protected void closeStatement(Statement statement) {
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }
