@@ -1,6 +1,8 @@
 package com.zhl.custommybatis;
 
+import com.zhl.custommybatis.database.cramapper.ICraDao;
 import com.zhl.custommybatis.database.mapper.UserMapper;
+import com.zhl.custommybatis.database.model.RemiCraClaimInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +19,18 @@ public class TestSQL {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private ICraDao iCraDao;
 
     @Test
     public void test() {
         System.out.println(userMapper.selectById(1));
+    }
+
+    @Test
+    public void testCra() {
+        RemiCraClaimInfo param = new RemiCraClaimInfo();
+        iCraDao.findRemiCraCilaiInfoCount(param);
+        System.out.println("test cra success");
     }
 }

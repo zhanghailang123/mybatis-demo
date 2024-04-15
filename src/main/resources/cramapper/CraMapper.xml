@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhl.custommybatis.database.cramapper.ICraDao">
+    <resultMap id="claimMiddleMap" type="com.zhl.custommybatis.database.model.RemiCraClaimInfo">
+        <result column="ID" property="craId" />
+        <result column="CUSTOMERNAME" property="custName" />
+        <result column="CONTRACTCODE" property="fnncConNo" />
+        <result column="AMOUNT" property="claimMoney" />
+        <result column="CREATETIME" property="craCreTime" />
+        <result column="PAYBACKNUMBER" property="payBackNumber" />
+        <result column="CUSTOMERID" property="custNo" />
+        <result column="CHANGEDATE" property="changeDateTime" />
+        <result column="PAYBACKDATE" property="paybackDate" />
+        <result column="PAYMENTNAME" property="paymentName" />
+        <result column="ACCOUNTSET" property="corpCode" />
+        <result column="WEBANKACCOUNT" property="bankNo" />
+    </resultMap>
+    <select id="findRemiCraCilaiInfoList" resultType="java.util.LinkedHashMap">
+        select t.* from
+        (select rownum as rnum,g.*
+        from v_cra_payback_info g
+        where 1=1
+        <if test="changeBegDate != null">
+            and g.CHANGEDATE &gt;= #{changeBegDate}
+        </if>
+        <if test="fnncConNo != null and fnncConNo != ''">
+            and g.CONTRACTCODE = #{fnncConNo}
+        </if>
+        ) t
+        where t.rnum &gt;= #{startIndex}
+        and t.rnum &lt;= #{endIndex}
+    </select>
+    <select id="findRemiCraCilaiInfoCount" resultType="java.lang.Integer">
+        select count(0)
+        from zp_centre_ods.v_cra_payback_info
+        where 1=1
+        <if test="changeBegDate != null">
+            and CHANGEDATE &gt;= #{changeBegDate}
+        </if>
+        <if test="fnncConNo != null and fnncConNo != ''">
+            and CONTRACTCODE = #{fnncConNo}
+        </if>
+    </select>
+    <select id="findRemiCraClaimInfoList" resultMap="claimMiddleMap">
+        select distinct *
+        from v_cra_payback_info
+        where CHANGEDATE &gt;= #{changeBegDate}
+    </select>
+</mapper>
+
+
+
+
+
+
+
